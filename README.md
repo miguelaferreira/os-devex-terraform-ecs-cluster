@@ -2,6 +2,17 @@
 
 A Terraform module to create an Amazon Web Services (AWS) EC2 Container Service (ECS) cluster.
 
+**Fork of https://github.com/azavea/terraform-aws-ecs-cluster at version 1.0.0**
+
+## Why a fork?
+
+The authors of the [original module](https://github.com/azavea/terraform-aws-ecs-cluster) and the author of this module have [agreed to diverge in direction](https://github.com/azavea/terraform-aws-ecs-cluster/pull/19) for the module.
+The author of this module is pursuing the direction of 100% automated operations on the ECS cluster.
+To that end, this module contains elements to provide zero-downtime rolling updates of the cluster instances.
+
+The approach followed here to achieve zero-downtime rolling updates is an implementation of the approach described in [this AWS blog post](https://aws.amazon.com/de/blogs/compute/how-to-automate-container-instance-draining-in-amazon-ecs/).
+It combines building the auto scaling group for the container instances using a cloud formation stack (which provides the rolling update mechanism), with a lambda function that is triggered on instance termination events to make sure the container instance is drained of cluster service tasks before it gets terminated.
+
 ## Usage
 
 ```hcl
@@ -14,7 +25,7 @@ data "template_file" "container_instance_cloud_config" {
 }
 
 module "container_service_cluster" {
-  source = "github.com/azavea/terraform-aws-ecs-cluster?ref=0.6.0"
+  source = "git://gitlab.com/open-source-devex/terraform-modules/aws/ecs-cluster.git?ref=1.0.0"
 
   vpc_id        = "vpc-20f74844"
   ami_id        = "ami-b2df2ca4"
@@ -94,3 +105,8 @@ module "container_service_cluster" {
 - `ecs_service_role_arn` - ARN of IAM role for use with ECS services
 - `ecs_autoscale_role_arn` - ARN of IAM role for use with ECS service autoscaling
 - `container_instance_ecs_for_ec2_service_role_arn` - ARN of IAM role associated with EC2 container instances
+
+# Copyright
+
+* Copyright December 2017 - to date, Open Source DevEx and the 'open-source-devex/terraform-modules/aws/ecs-cluster' contributors
+* Copyright March 2017 - December 2017, Azavea, Inc and the 'azavea/terraform-aws-ecs-cluster' contributors
