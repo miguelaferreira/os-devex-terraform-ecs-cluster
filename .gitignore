@@ -1,0 +1,7 @@
+secrets.tfvars
+.terraform/
+vendor/
+.kitchen/
+terraform.tfstate*
+terraform.tfstate.d/
+*.lock
