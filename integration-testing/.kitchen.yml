@@ -1,0 +1,28 @@
+---
+driver:
+  name: terraform
+  variable_files:
+    - secrets.tfvars
+
+provisioner:
+  name: terraform
+
+platforms:
+  - name: amazon-2017.03
+
+transport:
+  name: ssh
+  ssh_key: ~/.ssh/os-devex-id_rsa
+
+verifier:
+  name: terraform
+  format: doc
+  groups:
+    - name: default
+      controls:
+        - operating_system
+      hostnames: public_ip
+      username: ec2-user
+
+suites:
+  - name: default

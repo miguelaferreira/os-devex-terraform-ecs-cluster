@@ -111,6 +111,30 @@ module "ecs_cluster" {
 - `ecs_autoscale_role_arn` - ARN of IAM role for use with ECS service autoscaling
 - `container_instance_ecs_for_ec2_service_role_arn` - ARN of IAM role associated with EC2 container instances
 
+
+## Contributing
+
+Contributions to this module are very welcome, please fork this repository and submit merge requests.
+We are trying an approach to testing based on test-kitchen and the [kitchen-terraform](https://github.com/newcontext-oss/kitchen-terraform) plugin, so please consider adding tests to your merge requests.
+
+### Run the tests
+
+The integration tests require ruby and companion tools like bundler to be available on the command line.
+
+
+```bash
+cd integration-testing
+
+touch secrets.tfvars
+# edit secrets.tfvars to define terraform variables: 'aws_access_key_id', 'aws_secret_access_key' and 'aws_region'
+
+bundle install                                    # to install test tooling
+
+bundle exec kitchen converge                      # to provision the test infrastructure on AWS
+bundle exec kitchen verify                        # to run the tests
+bundle exec kitchen destroy                       # to destroy the test infrastructure
+```
+
 # Copyright
 
 * Copyright December 2017 - to date, Open Source DevEx and the 'open-source-devex/terraform-modules/aws/ecs-cluster' contributors
