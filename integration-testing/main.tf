@@ -18,7 +18,7 @@ provider "aws" {
 # Configure VPC
 # #################################################################
 variable "name" {
-  default = "integration-test"
+  default = "integrationTest"
 }
 
 variable "vpc_cidr" {
