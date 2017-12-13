@@ -24,7 +24,7 @@ data "template_file" "container_instance_cloud_config" {
   }
 }
 
-module "container_service_cluster" {
+module "ecs_cluster" {
   source = "git://gitlab.com/open-source-devex/terraform-modules/aws/ecs-cluster.git?ref=1.0.0"
 
   vpc_id        = "vpc-20f74844"
