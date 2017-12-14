@@ -5,3 +5,5 @@ vendor/
 terraform.tfstate*
 terraform.tfstate.d/
 *.lock
+ci-overrides.tf
+ci-variables.tfvars
