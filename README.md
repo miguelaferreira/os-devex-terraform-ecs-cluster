@@ -102,6 +102,10 @@ module "ecs_cluster" {
 - `allow_ssh_in` - Set to true to configure SSH access to cluster instances (requires `ssh_public_key_file` and `ssh_allowed_cidr`). (default: `false`)
 - `ssh_public_key_file` - an SSH key pair public file. (default: ``)
 - `ssh_allowed_cidr` - A CIDR from which instances accept SSH connections. (default: ``)
+- `allow_http_out` - Set to true to configure HTTP access from cluster instances (requires `http_allowed_cidr`). (default `false`)
+- `http_allowed_cidr` - A CIDR to which instances can connect via HTTP.
+- `allow_https_out` - Set to true to configure HTTPS access from cluster instances (requires `https_allowed_cidr`). (default `false`)
+- `https_allowed_cidr` - A CIDR to which instances can connect via HTTPS.
 
 ## Outputs
 

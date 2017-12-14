@@ -35,6 +35,26 @@ variable "ssh_allowed_cidr" {
   default     = ""
 }
 
+variable "allow_http_out" {
+  description = "Set to true to configure HTTP access from cluster instances (requires `http_allowed_cidr`)."
+  default     = false
+}
+
+variable "http_allowed_cidr" {
+  description = "A CIDR to which instances can connect via HTTP."
+  default     = ""
+}
+
+variable "allow_https_out" {
+  description = "Set to true to configure HTTPS access from cluster instances (requires `https_allowed_cidr`)."
+  default     = false
+}
+
+variable "https_allowed_cidr" {
+  description = "A CIDR to which instances can connect via HTTPS."
+  default     = ""
+}
+
 variable "termination_policies" {
   default = ["OldestLaunchConfiguration", "Default"]
 }
