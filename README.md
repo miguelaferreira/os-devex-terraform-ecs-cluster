@@ -106,6 +106,10 @@ module "ecs_cluster" {
 - `http_allowed_cidr` - A CIDR to which instances can connect via HTTP.
 - `allow_https_out` - Set to true to configure HTTPS access from cluster instances (requires `https_allowed_cidr`). (default `false`)
 - `https_allowed_cidr` - A CIDR to which instances can connect via HTTPS.
+- `allow_consul_gossip` - Set to true to configure Consul gossip ports to and from cluster instances (requires `consul_gossip_allowed_cidr`).
+- `consul_gossip_allowed_cidr` - A CIDR to allow Consul gossip traffic to and from.
+- `allow_consul_client_server_rdp` - Set to true to configure Consul RDP access from cluster instances (requires `consul_client_server_rdp_allowed_cidr`).
+- `consul_client_server_rdp_allowed_cidr` - A CIDR to which instances can connect via Consul RDP
 
 ## Outputs
 

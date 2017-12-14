@@ -43,3 +43,73 @@ resource "aws_security_group_rule" "ecs_instances_https_out" {
 
   count = "${var.allow_https_out ? 1 : 0}"
 }
+
+# Consul Gossip 8301 TCP <= in
+resource "aws_security_group_rule" "ecs_instances_consul_8301_tcp_in" {
+  description = "Consul LAN gossip"
+  type        = "ingress"
+  from_port   = 8301
+  to_port     = 8301
+  protocol    = "tcp"
+  cidr_blocks = ["${var.consul_gossip_allowed_cidr}"]
+
+  security_group_id = "${aws_security_group.container_instance.id}"
+
+  count = "${var.allow_consul_gossip ? 1 : 0}"
+}
+
+# Consul Gossip 8301 TCP => out
+resource "aws_security_group_rule" "ecs_instances_consul_8301_tcp_out" {
+  description = "Consul LAN gossip"
+  type        = "egress"
+  from_port   = 8301
+  to_port     = 8301
+  protocol    = "tcp"
+  cidr_blocks = ["${var.consul_gossip_allowed_cidr}"]
+
+  security_group_id = "${aws_security_group.container_instance.id}"
+
+  count = "${var.allow_consul_gossip ? 1 : 0}"
+}
+
+# Consul Gossip 8301 UDP <= in
+resource "aws_security_group_rule" "ecs_instances_consul_8301_udp_in" {
+  description = "Consul LAN gossip"
+  type        = "ingress"
+  from_port   = 8301
+  to_port     = 8301
+  protocol    = "udp"
+  cidr_blocks = ["${var.consul_gossip_allowed_cidr}"]
+
+  security_group_id = "${aws_security_group.container_instance.id}"
+
+  count = "${var.allow_consul_gossip ? 1 : 0}"
+}
+
+# Consul Gossip 8301 UDP => out
+resource "aws_security_group_rule" "ecs_instances_consul_8301_udp_out" {
+  description = "Consul LAN gossip"
+  type        = "egress"
+  from_port   = 8301
+  to_port     = 8301
+  protocol    = "udp"
+  cidr_blocks = ["${var.consul_gossip_allowed_cidr}"]
+
+  security_group_id = "${aws_security_group.container_instance.id}"
+
+  count = "${var.allow_consul_gossip ? 1 : 0}"
+}
+
+# Consul RDP => out
+resource "aws_security_group_rule" "ecs_instances_consul_8300_tcp_out" {
+  description = "Consul client RCP to consul server"
+  type        = "egress"
+  from_port   = 8300
+  to_port     = 8300
+  protocol    = "tcp"
+  cidr_blocks = ["${var.consul_client_server_rdp_allowed_cidr}"]
+
+  security_group_id = "${aws_security_group.container_instance.id}"
+
+  count = "${var.allow_consul_client_server_rdp ? 1 : 0}"
+}

@@ -55,6 +55,26 @@ variable "https_allowed_cidr" {
   default     = ""
 }
 
+variable "allow_consul_gossip" {
+  description = "Set to true to configure Consul gossip ports to and from cluster instances (requires `https_allowed_cidr`)."
+  default     = false
+}
+
+variable "consul_gossip_allowed_cidr" {
+  description = "A CIDR to allow Consul gossip traffic to and from."
+  default     = ""
+}
+
+variable "allow_consul_client_server_rdp" {
+  description = "Set to true to configure Consul RDP access from cluster instances (requires `https_allowed_cidr`)."
+  default     = false
+}
+
+variable "consul_client_server_rdp_allowed_cidr" {
+  description = "A CIDR to which instances can connect via Consul RDP"
+  default     = ""
+}
+
 variable "termination_policies" {
   default = ["OldestLaunchConfiguration", "Default"]
 }
