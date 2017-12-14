@@ -75,6 +75,16 @@ variable "consul_client_server_rdp_allowed_cidr" {
   default     = ""
 }
 
+variable "allow_logzio_eu_out" {
+  description = "Set to true to configure (logback appender to) logz.io (EU) access from cluster instances (requires `logzio_eu_allowed_cidr`)."
+  default     = false
+}
+
+variable "logzio_eu_allowed_cidr" {
+  description = "A CIDR to which instances can connect to https://listener-eu.logz.io:8071."
+  default     = ""
+}
+
 variable "termination_policies" {
   default = ["OldestLaunchConfiguration", "Default"]
 }
