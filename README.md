@@ -69,7 +69,6 @@ module "ecs_cluster" {
 - `root_block_device_type` - Instance root block device type (default: `gp2`)
 - `root_block_device_size` - Instance root block device size in gigabytes (default: `8`)
 - `instance_type` - Instance type for cluster instances (default: `t2.micro`)
-- `key_name` - EC2 Key pair name
 - `cloud_config_content` - user data supplied to launch configuration for cluster nodes
 - `cloud_config_content_type` - the type of configuration being passed in as user data, see [EC2 user guide](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonLinuxAMIBasics.html#CloudInit) for a list of possible types (default: `text/cloud-config`)
 - `health_check_grace_period` - Time in seconds after container instance comes into service before checking health (default: `600`)
@@ -100,6 +99,9 @@ module "ecs_cluster" {
 - `environment` - Name of environment this cluster is targeting (default: `env`)
 - `ecs_instance_daemon_tasks` - Number of tasks running as daemons on the cluster instances (default: `0`)
 - `monitoring_enabled` - Sets the value of 'MonitoringEnabled' resource tag (default: `false`)
+- `allow_ssh_in` - Set to true to configure SSH access to cluster instances (requires `ssh_public_key_file` and `ssh_allowed_cidr`). (default: `false`)
+- `ssh_public_key_file` - an SSH key pair public file. (default: ``)
+- `ssh_allowed_cidr` - A CIDR from which instances accept SSH connections. (default: ``)
 
 ## Outputs
 
