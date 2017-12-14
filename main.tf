@@ -1,3 +1,16 @@
+# #################################################################
+# Locals
+# #################################################################
+locals {
+  common_tags = {
+    Project     = "${var.project}"
+    Environment = "${var.environment}"
+    Monitoring  = "${var.monitoring_enabled}"
+  }
+
+  resource_name_suffix = "${title(var.project)}${title(var.environment)}"
+}
+
 #
 # Container Instance IAM resources
 #
@@ -15,7 +28,7 @@ data "aws_iam_policy_document" "container_instance_ec2_assume_role" {
 }
 
 resource "aws_iam_role" "container_instance_ec2" {
-  name               = "${var.environment}ContainerInstanceProfile"
+  name               = "${local.resource_name_suffix}ContainerInstanceProfile"
   assume_role_policy = "${data.aws_iam_policy_document.container_instance_ec2_assume_role.json}"
 }
 
@@ -47,7 +60,7 @@ data "aws_iam_policy_document" "ecs_assume_role" {
 }
 
 resource "aws_iam_role" "ecs_service_role" {
-  name               = "ecs${title(var.environment)}ServiceRole"
+  name               = "${local.resource_name_suffix}EcsServiceRole"
   assume_role_policy = "${data.aws_iam_policy_document.ecs_assume_role.json}"
 }
 
@@ -70,7 +83,7 @@ data "aws_iam_policy_document" "ecs_autoscale_assume_role" {
 }
 
 resource "aws_iam_role" "ecs_autoscale_role" {
-  name               = "ecs${title(var.environment)}AutoscaleRole"
+  name               = "${local.resource_name_suffix}EcsAutoscaleRole"
   assume_role_policy = "${data.aws_iam_policy_document.ecs_autoscale_assume_role.json}"
 }
 
@@ -85,11 +98,12 @@ resource "aws_iam_role_policy_attachment" "ecs_service_autoscaling_role" {
 resource "aws_security_group" "container_instance" {
   vpc_id = "${var.vpc_id}"
 
-  tags {
-    Name        = "sgContainerInstance"
-    Project     = "${var.project}"
-    Environment = "${var.environment}"
-  }
+  tags = "${merge(
+    local.common_tags,
+    map(
+      "Name", "sgContainerInstance"
+    )
+  )}"
 }
 
 #
@@ -163,7 +177,7 @@ resource "aws_launch_configuration" "container_instance" {
     volume_size = "${var.root_block_device_size}"
   }
 
-  name_prefix          = "lc${title(var.environment)}ContainerInstance-"
+  name_prefix          = "${local.resource_name_suffix}ECSCluster-"
   iam_instance_profile = "${aws_iam_instance_profile.container_instance.name}"
 
   # Using join() is a workaround for depending on conditional resources.
@@ -183,7 +197,7 @@ resource "aws_cloudformation_stack" "autoscaling_group" {
     create_before_destroy = true
   }
 
-  name = "cfStackAsg${title(var.environment)}ContainerInstance"
+  name = "${local.resource_name_suffix}ECSCluster"
 
   template_body = <<EOF
 {
@@ -247,22 +261,22 @@ EOF
 # ECS resources
 #
 resource "aws_ecs_cluster" "container_instance" {
-  name = "ecs${title(var.environment)}Cluster"
+  name = "${local.resource_name_suffix}"
 }
 
 #
 # CloudWatch resources
 #
-resource "aws_autoscaling_policy" "container_instance_scale_up" {
-  name                   = "asgScalingPolicy${title(var.environment)}ClusterScaleUp"
+resource "aws_autoscaling_policy" "container_instance_scale_out" {
+  name                   = "${local.resource_name_suffix}ECSClusterScaleOut"
   scaling_adjustment     = 1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = "${var.scale_up_cooldown_seconds}"
   autoscaling_group_name = "${aws_cloudformation_stack.autoscaling_group.outputs["name"]}"
 }
 
-resource "aws_autoscaling_policy" "container_instance_scale_down" {
-  name                   = "asgScalingPolicy${title(var.environment)}ClusterScaleDown"
+resource "aws_autoscaling_policy" "container_instance_scale_in" {
+  name                   = "${local.resource_name_suffix}ECSClusterScaleIn"
   scaling_adjustment     = -1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = "${var.scale_down_cooldown_seconds}"
@@ -270,7 +284,7 @@ resource "aws_autoscaling_policy" "container_instance_scale_down" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "container_instance_high_cpu" {
-  alarm_name          = "alarm${title(var.environment)}ClusterCPUReservationHigh"
+  alarm_name          = "${local.resource_name_suffix}ECSClusterCPUReservationHigh"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "${var.high_cpu_evaluation_periods}"
   metric_name         = "CPUReservation"
@@ -283,12 +297,12 @@ resource "aws_cloudwatch_metric_alarm" "container_instance_high_cpu" {
     ClusterName = "${aws_ecs_cluster.container_instance.name}"
   }
 
-  alarm_description = "Scale up if CPUReservation is above N% for N duration"
-  alarm_actions     = ["${aws_autoscaling_policy.container_instance_scale_up.arn}"]
+  alarm_description = "Scale out if CPUReservation is above N% for N duration"
+  alarm_actions     = ["${aws_autoscaling_policy.container_instance_scale_out.arn}"]
 }
 
 resource "aws_cloudwatch_metric_alarm" "container_instance_low_cpu" {
-  alarm_name          = "alarm${title(var.environment)}ClusterCPUReservationLow"
+  alarm_name          = "${local.resource_name_suffix}ECSClusterCPUReservationLow"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "${var.low_cpu_evaluation_periods}"
   metric_name         = "CPUReservation"
@@ -301,14 +315,14 @@ resource "aws_cloudwatch_metric_alarm" "container_instance_low_cpu" {
     ClusterName = "${aws_ecs_cluster.container_instance.name}"
   }
 
-  alarm_description = "Scale down if the CPUReservation is below N% for N duration"
-  alarm_actions     = ["${aws_autoscaling_policy.container_instance_scale_down.arn}"]
+  alarm_description = "Scale in if the CPUReservation is below N% for N duration"
+  alarm_actions     = ["${aws_autoscaling_policy.container_instance_scale_in.arn}"]
 
   depends_on = ["aws_cloudwatch_metric_alarm.container_instance_high_cpu"]
 }
 
 resource "aws_cloudwatch_metric_alarm" "container_instance_high_memory" {
-  alarm_name          = "alarm${title(var.environment)}ClusterMemoryReservationHigh"
+  alarm_name          = "${local.resource_name_suffix}ECSClusterMemoryReservationHigh"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "${var.high_memory_evaluation_periods}"
   metric_name         = "MemoryReservation"
@@ -321,14 +335,14 @@ resource "aws_cloudwatch_metric_alarm" "container_instance_high_memory" {
     ClusterName = "${aws_ecs_cluster.container_instance.name}"
   }
 
-  alarm_description = "Scale up if the MemoryReservation is above N% for N duration"
-  alarm_actions     = ["${aws_autoscaling_policy.container_instance_scale_up.arn}"]
+  alarm_description = "Scale out if the MemoryReservation is above N% for N duration"
+  alarm_actions     = ["${aws_autoscaling_policy.container_instance_scale_out.arn}"]
 
   depends_on = ["aws_cloudwatch_metric_alarm.container_instance_low_cpu"]
 }
 
 resource "aws_cloudwatch_metric_alarm" "container_instance_low_memory" {
-  alarm_name          = "alarm${title(var.environment)}ClusterMemoryReservationLow"
+  alarm_name          = "${local.resource_name_suffix}ECSClusterMemoryReservationLow"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "${var.low_memory_evaluation_periods}"
   metric_name         = "MemoryReservation"
@@ -341,8 +355,8 @@ resource "aws_cloudwatch_metric_alarm" "container_instance_low_memory" {
     ClusterName = "${aws_ecs_cluster.container_instance.name}"
   }
 
-  alarm_description = "Scale down if the MemoryReservation is below N% for N duration"
-  alarm_actions     = ["${aws_autoscaling_policy.container_instance_scale_down.arn}"]
+  alarm_description = "Scale in if the MemoryReservation is below N% for N duration"
+  alarm_actions     = ["${aws_autoscaling_policy.container_instance_scale_in.arn}"]
 
   depends_on = ["aws_cloudwatch_metric_alarm.container_instance_high_memory"]
 }

@@ -1,4 +1,4 @@
 #cloud-config
 
-bootcmd:
+runcmd:
   - echo "${environment}: OK" >> /tmp/user-data.txt

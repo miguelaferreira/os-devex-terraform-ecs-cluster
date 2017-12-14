@@ -1,9 +1,21 @@
 variable "project" {
-  default = "Unknown"
+  description = "Name of project this cluster is for. Sets the value of 'MonitoringEnabled' resource tag"
+  default     = ""
 }
 
 variable "environment" {
-  default = "Unknown"
+  description = "Name of environment this cluster is targeting. Sets the value of 'MonitoringEnabled' resource tag"
+  default     = "env"
+}
+
+variable "ecs_instance_daemon_tasks" {
+  description = "Number of tasks running as daemons on the cluster instances"
+  default     = 0
+}
+
+variable "monitoring_enabled" {
+  description = "Sets the value of 'MonitoringEnabled' resource tag"
+  default     = false
 }
 
 variable "vpc_id" {}

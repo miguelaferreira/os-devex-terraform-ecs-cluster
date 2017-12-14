@@ -54,7 +54,7 @@ module "vpc" {
 # Configure ECS
 # #################################################################
 module "ecs_cluster" {
-  source = "git::https://gitlab.com/open-source-devex/terraform-modules/aws/ecs-cluster?ref=master"
+  source = "../"
 
   vpc_id               = "${module.vpc.vpc_id}"
   lookup_latest_ami    = true
@@ -83,6 +83,8 @@ module "ecs_cluster" {
 
   private_subnet_ids = ["${module.vpc.public_subnets}"]
 
+  instance_draining_function_jar = "../lambda/ecs-instance-draining-v0.1-aws.jar"
+
   project     = "Something"
   environment = "${var.name}"
 }
@@ -109,12 +111,32 @@ data "template_file" "container_instance_cloud_config" {
 }
 
 # #################################################################
-# Configure SSH access
+# Configure networking
 # #################################################################
 resource "aws_security_group_rule" "ecs_instances_ssh_in" {
   type        = "ingress"
   from_port   = 22
   to_port     = 22
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = "${module.ecs_cluster.container_instance_security_group_id}"
+}
+
+resource "aws_security_group_rule" "ecs_instances_http_out" {
+  type        = "egress"
+  from_port   = 80
+  to_port     = 80
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = "${module.ecs_cluster.container_instance_security_group_id}"
+}
+
+resource "aws_security_group_rule" "ecs_instances_https_out" {
+  type        = "egress"
+  from_port   = 443
+  to_port     = 443
   protocol    = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
 

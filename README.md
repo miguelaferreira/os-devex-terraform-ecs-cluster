@@ -96,8 +96,10 @@ module "ecs_cluster" {
 - `low_memory_evaluation_periods` - Number of evaluation periods for low memory alarm (default: `2`)
 - `low_memory_period_seconds` - Number of seconds in an evaluation period for low memory alarm (default: `300`)
 - `low_memory_threshold_percent` - Threshold as a percentage for low memory alarm (default: `10`)
-- `project` - Name of project this cluster is for (default: `Unknown`)
-- `environment` - Name of environment this cluster is targeting (default: `Unknown`)
+- `project` - Name of project this cluster is for (default: ``)
+- `environment` - Name of environment this cluster is targeting (default: `env`)
+- `ecs_instance_daemon_tasks` - Number of tasks running as daemons on the cluster instances (default: `0`)
+- `monitoring_enabled` - Sets the value of 'MonitoringEnabled' resource tag (default: `false`)
 
 ## Outputs
 
@@ -134,6 +136,22 @@ bundle exec kitchen converge                      # to provision the test infras
 bundle exec kitchen verify                        # to run the tests
 bundle exec kitchen destroy                       # to destroy the test infrastructure
 ```
+
+When creating the infrastructure to test agains (`kitchen converge`), kitchen requires the public IP of the instance being created by the autoscaling group.
+Since terraform is not managing the instances directly, a data source is used in the test fixture to fetch the IP.
+```hcl
+data "aws_instances" "test" {
+  instance_tags {
+    Environment = "${var.name}"
+  }
+
+  depends_on = ["module.ecs_cluster"]
+}
+```
+The explicit dependency on `module.ecs_cluster` is added to enforce that this data source should only be computed after the cluster is built (which doesn't mean that the instance will be ready, so it sometimes fails and needs a retry).
+However, when modifying the launch configuration of the autoscaling group, terraform will report an dependency cycle.
+In that case one needs to comment out the explicit dependency to allow terraform to make the modification.
+
 
 # Copyright
 
