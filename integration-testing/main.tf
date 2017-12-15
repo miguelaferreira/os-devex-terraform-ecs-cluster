@@ -81,7 +81,7 @@ module "ecs_cluster" {
     "GroupTotalInstances",
   ]
 
-  private_subnet_ids = ["${module.vpc.public_subnets}"]
+  vpc_private_subnet_ids = ["${module.vpc.public_subnets}"]
 
   instance_draining_function_jar = "../lambda/ecs-instance-draining-v0.1-aws.jar"
 

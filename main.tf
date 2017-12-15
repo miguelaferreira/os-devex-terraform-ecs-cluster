@@ -226,7 +226,7 @@ resource "aws_cloudformation_stack" "autoscaling_group" {
         "TerminationPolicies": ["${join("\",\"", var.termination_policies)}"],
         "MaxSize": "${var.max_size}",
         "MinSize": "${var.min_size}",
-        "VPCZoneIdentifier": ["${join("\",\"", var.private_subnet_ids)}"],
+        "VPCZoneIdentifier": ["${join("\",\"", var.vpc_private_subnet_ids)}"],
         "MetricsCollection": [
             {
                 "Granularity" : "1Minute",

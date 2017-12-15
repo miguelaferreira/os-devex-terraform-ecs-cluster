@@ -11,7 +11,7 @@ set -v
 CI_VARIABLES=ci-variables.tfvars
 OVERRIDES_FILE=ci-overrides.tf
 echo 'vpc_id = "string"' >> ${CI_VARIABLES}
-echo 'private_subnet_ids = ["list"]' >> ${CI_VARIABLES}
+echo 'vpc_private_subnet_ids = ["list"]' >> ${CI_VARIABLES}
 echo 'key_name = "string"' >> ${CI_VARIABLES}
 echo 'cloud_config_content = "string"' >> ${CI_VARIABLES}
 

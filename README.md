@@ -53,7 +53,7 @@ module "ecs_cluster" {
     "GroupTotalInstances",
   ]
 
-  private_subnet_ids = [...]
+  vpc_private_subnet_ids = [...]
 
   project     = "Something"
   environment = "Staging"
@@ -80,7 +80,7 @@ module "ecs_cluster" {
 - `rolling_update_pause_time` - How much time to wait between updating instances (default: `PT5M` - 5 minutes)
 - `rolling_update_wait_on_signal` - Should rolling update wait for a signal sent from each new instance before moving on to the next
 - `enabled_metrics` - A list of metrics to gather for the cluster
-- `private_subnet_ids` - A list of private subnet IDs to launch cluster instances
+- `vpc_private_subnet_ids` - A list of private subnet IDs to launch cluster instances
 - `scale_up_cooldown_seconds` - Number of seconds before allowing another scale up activity (default: `300`)
 - `scale_down_cooldown_seconds` - Number of seconds before allowing another scale down activity (default: `300`)
 - `high_cpu_evaluation_periods` - Number of evaluation periods for high CPU alarm (default: `2`)
