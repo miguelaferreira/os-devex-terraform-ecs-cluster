@@ -29,5 +29,5 @@ resource "aws_iam_role_policy_attachment" "start_daemon_task" {
   count = "${var.enable_daemon_tasks ? 1 : 0}"
 
   role       = "${aws_iam_role.container_instance_ec2.name}"
-  policy_arn = "${aws_iam_policy.start_task.arn}"
+  policy_arn = "${aws_iam_policy.start_daemon_task.arn}"
 }
