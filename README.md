@@ -101,17 +101,16 @@ module "ecs_cluster" {
 - `monitoring_enabled` - Sets the value of 'MonitoringEnabled' resource tag (default: `false`)
 - `allow_ssh_in` - Set to true to configure SSH access to cluster instances (requires `ssh_public_key_file` and `ssh_allowed_cidr`). (default: `false`)
 - `ssh_public_key_file` - an SSH key pair public file. (default: ``)
-- `ssh_allowed_cidr` - A CIDR from which instances accept SSH connections. (default: ``)
+- `ssh_allowed_cidrs` - A list of CIDRs from which instances accept SSH connections. (default: ``)
 - `allow_http_out` - Set to true to configure HTTP access from cluster instances (requires `http_allowed_cidr`). (default `false`)
-- `http_allowed_cidr` - A CIDR to which instances can connect via HTTP.
+- `http_allowed_cidrs` - A list of CIDRs to which instances can connect via HTTP.
 - `allow_https_out` - Set to true to configure HTTPS access from cluster instances (requires `https_allowed_cidr`). (default `false`)
-- `https_allowed_cidr` - A CIDR to which instances can connect via HTTPS.
+- `https_allowed_cidrs` - A list of CIDRs to which instances can connect via HTTPS.
 - `allow_consul_gossip` - Set to true to configure Consul gossip ports to and from cluster instances (requires `consul_gossip_allowed_cidr`).
-- `consul_gossip_allowed_cidr` - A CIDR to allow Consul gossip traffic to and from.
+- `consul_gossip_allowed_cidrs` - A list of CIDRs to allow Consul gossip traffic to and from.
 - `allow_consul_client_server_rdp` - Set to true to configure Consul RDP access from cluster instances (requires `consul_client_server_rdp_allowed_cidr`).
-- `consul_client_server_rdp_allowed_cidr` - A CIDR to which instances can connect via Consul RDP
+- `consul_client_server_rdp_allowed_cidrs` - A list of CIDRs to which instances can connect via Consul RDP
 - `allow_logzio_eu_out` - Set to true to configure (logback appender to) logz.io (EU) access from cluster instances (requires `logzio_eu_allowed_cidr`).
-- `logzio_eu_allowed_cidr` - A CIDR to which instances can connect to https://listener-eu.logz.io:8071.
 - `enable_daemon_tasks` - Set to true to create the required IAM policies to allow cluster instances to start their own daemon tasks. (default: `false`)
 
 ## Outputs

@@ -9,7 +9,7 @@ resource "aws_security_group_rule" "ecs_instances_ssh_in" {
   from_port   = 22
   to_port     = 22
   protocol    = "tcp"
-  cidr_blocks = ["${var.ssh_allowed_cidr}"]
+  cidr_blocks = ["${var.ssh_allowed_cidrs}"]
 
   security_group_id = "${aws_security_group.container_instance.id}"
 
@@ -23,7 +23,7 @@ resource "aws_security_group_rule" "ecs_instances_http_out" {
   from_port   = 80
   to_port     = 80
   protocol    = "tcp"
-  cidr_blocks = ["${var.http_allowed_cidr}"]
+  cidr_blocks = ["${var.http_allowed_cidrs}"]
 
   security_group_id = "${aws_security_group.container_instance.id}"
 
@@ -37,7 +37,7 @@ resource "aws_security_group_rule" "ecs_instances_https_out" {
   from_port   = 443
   to_port     = 443
   protocol    = "tcp"
-  cidr_blocks = ["${var.https_allowed_cidr}"]
+  cidr_blocks = ["${var.https_allowed_cidrs}"]
 
   security_group_id = "${aws_security_group.container_instance.id}"
 
@@ -51,7 +51,7 @@ resource "aws_security_group_rule" "ecs_instances_consul_8301_tcp_in" {
   from_port   = 8301
   to_port     = 8301
   protocol    = "tcp"
-  cidr_blocks = ["${var.consul_gossip_allowed_cidr}"]
+  cidr_blocks = ["${var.consul_gossip_allowed_cidrs}"]
 
   security_group_id = "${aws_security_group.container_instance.id}"
 
@@ -65,7 +65,7 @@ resource "aws_security_group_rule" "ecs_instances_consul_8301_tcp_out" {
   from_port   = 8301
   to_port     = 8301
   protocol    = "tcp"
-  cidr_blocks = ["${var.consul_gossip_allowed_cidr}"]
+  cidr_blocks = ["${var.consul_gossip_allowed_cidrs}"]
 
   security_group_id = "${aws_security_group.container_instance.id}"
 
@@ -79,7 +79,7 @@ resource "aws_security_group_rule" "ecs_instances_consul_8301_udp_in" {
   from_port   = 8301
   to_port     = 8301
   protocol    = "udp"
-  cidr_blocks = ["${var.consul_gossip_allowed_cidr}"]
+  cidr_blocks = ["${var.consul_gossip_allowed_cidrs}"]
 
   security_group_id = "${aws_security_group.container_instance.id}"
 
@@ -93,7 +93,7 @@ resource "aws_security_group_rule" "ecs_instances_consul_8301_udp_out" {
   from_port   = 8301
   to_port     = 8301
   protocol    = "udp"
-  cidr_blocks = ["${var.consul_gossip_allowed_cidr}"]
+  cidr_blocks = ["${var.consul_gossip_allowed_cidrs}"]
 
   security_group_id = "${aws_security_group.container_instance.id}"
 
@@ -107,7 +107,7 @@ resource "aws_security_group_rule" "ecs_instances_consul_8300_tcp_out" {
   from_port   = 8300
   to_port     = 8300
   protocol    = "tcp"
-  cidr_blocks = ["${var.consul_client_server_rdp_allowed_cidr}"]
+  cidr_blocks = ["${var.consul_client_server_rdp_allowed_cidrs}"]
 
   security_group_id = "${aws_security_group.container_instance.id}"
 
