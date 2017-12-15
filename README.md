@@ -69,7 +69,6 @@ module "ecs_cluster" {
 - `root_block_device_type` - Instance root block device type (default: `gp2`)
 - `root_block_device_size` - Instance root block device size in gigabytes (default: `8`)
 - `instance_type` - Instance type for cluster instances (default: `t2.micro`)
-- `key_name` - EC2 Key pair name
 - `cloud_config_content` - user data supplied to launch configuration for cluster nodes
 - `cloud_config_content_type` - the type of configuration being passed in as user data, see [EC2 user guide](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonLinuxAMIBasics.html#CloudInit) for a list of possible types (default: `text/cloud-config`)
 - `health_check_grace_period` - Time in seconds after container instance comes into service before checking health (default: `600`)
@@ -100,6 +99,20 @@ module "ecs_cluster" {
 - `environment` - Name of environment this cluster is targeting (default: `env`)
 - `ecs_instance_daemon_tasks` - Number of tasks running as daemons on the cluster instances (default: `0`)
 - `monitoring_enabled` - Sets the value of 'MonitoringEnabled' resource tag (default: `false`)
+- `allow_ssh_in` - Set to true to configure SSH access to cluster instances (requires `ssh_public_key_file` and `ssh_allowed_cidr`). (default: `false`)
+- `ssh_public_key_file` - an SSH key pair public file. (default: ``)
+- `ssh_allowed_cidr` - A CIDR from which instances accept SSH connections. (default: ``)
+- `allow_http_out` - Set to true to configure HTTP access from cluster instances (requires `http_allowed_cidr`). (default `false`)
+- `http_allowed_cidr` - A CIDR to which instances can connect via HTTP.
+- `allow_https_out` - Set to true to configure HTTPS access from cluster instances (requires `https_allowed_cidr`). (default `false`)
+- `https_allowed_cidr` - A CIDR to which instances can connect via HTTPS.
+- `allow_consul_gossip` - Set to true to configure Consul gossip ports to and from cluster instances (requires `consul_gossip_allowed_cidr`).
+- `consul_gossip_allowed_cidr` - A CIDR to allow Consul gossip traffic to and from.
+- `allow_consul_client_server_rdp` - Set to true to configure Consul RDP access from cluster instances (requires `consul_client_server_rdp_allowed_cidr`).
+- `consul_client_server_rdp_allowed_cidr` - A CIDR to which instances can connect via Consul RDP
+- `allow_logzio_eu_out` - Set to true to configure (logback appender to) logz.io (EU) access from cluster instances (requires `logzio_eu_allowed_cidr`).
+- `logzio_eu_allowed_cidr` - A CIDR to which instances can connect to https://listener-eu.logz.io:8071.
+- `enable_daemon_tasks` - Set to true to create the required IAM policies to allow cluster instances to start their own daemon tasks. (default: `false`)
 
 ## Outputs
 

@@ -20,6 +20,76 @@ variable "monitoring_enabled" {
 
 variable "vpc_id" {}
 
+variable "allow_ssh_in" {
+  description = "Set to true to configure SSH access to cluster instances (requires `ssh_public_key_file` and `ssh_allowed_cidr`)."
+  default     = false
+}
+
+variable "ssh_public_key_file" {
+  description = "A publick key file to provide SSH access to the cluster instances"
+  default     = ""
+}
+
+variable "ssh_allowed_cidr" {
+  description = "A CIDR from which instances accept SSH connections."
+  default     = ""
+}
+
+variable "allow_http_out" {
+  description = "Set to true to configure HTTP access from cluster instances (requires `http_allowed_cidr`)."
+  default     = false
+}
+
+variable "http_allowed_cidr" {
+  description = "A CIDR to which instances can connect via HTTP."
+  default     = ""
+}
+
+variable "allow_https_out" {
+  description = "Set to true to configure HTTPS access from cluster instances (requires `https_allowed_cidr`)."
+  default     = false
+}
+
+variable "https_allowed_cidr" {
+  description = "A CIDR to which instances can connect via HTTPS."
+  default     = ""
+}
+
+variable "allow_consul_gossip" {
+  description = "Set to true to configure Consul gossip ports to and from cluster instances (requires `https_allowed_cidr`)."
+  default     = false
+}
+
+variable "consul_gossip_allowed_cidr" {
+  description = "A CIDR to allow Consul gossip traffic to and from."
+  default     = ""
+}
+
+variable "allow_consul_client_server_rdp" {
+  description = "Set to true to configure Consul RDP access from cluster instances (requires `https_allowed_cidr`)."
+  default     = false
+}
+
+variable "consul_client_server_rdp_allowed_cidr" {
+  description = "A CIDR to which instances can connect via Consul RDP"
+  default     = ""
+}
+
+variable "allow_logzio_eu_out" {
+  description = "Set to true to configure (logback appender to) logz.io (EU) access from cluster instances (requires `logzio_eu_allowed_cidr`)."
+  default     = false
+}
+
+variable "logzio_eu_allowed_cidr" {
+  description = "A CIDR to which instances can connect to https://listener-eu.logz.io:8071."
+  default     = ""
+}
+
+variable "enable_daemon_tasks" {
+  description = "Set to true to create the required IAM policies to allow cluster instances to start their own daemon tasks"
+  default     = "false"
+}
+
 variable "termination_policies" {
   default = ["OldestLaunchConfiguration", "Default"]
 }

@@ -9,6 +9,20 @@ locals {
   }
 
   resource_name_suffix = "${title(var.project)}${title(var.environment)}"
+
+  # Workaround for interpolation not being able to "short-circuit" the evaluation of the conditional branch that doesn't end up being used
+  # Source: https://github.com/hashicorp/terraform/issues/11566#issuecomment-289417805
+  ssh_key_name = "${split(",", (var.allow_ssh_in ? join(",", list(aws_key_pair.ecs_instances.key_name)) : join(",", list(""))))}"
+}
+
+# #################################################################
+# SSH key pair for cluster instances
+# #################################################################
+resource "aws_key_pair" "ecs_instances" {
+  key_name   = "${local.resource_name_suffix}ECSInstance"
+  public_key = "${file(var.ssh_public_key_file)}"
+
+  count = "${var.allow_ssh_in ? 1 : 0}"
 }
 
 #
@@ -185,7 +199,7 @@ resource "aws_launch_configuration" "container_instance" {
   image_id = "${var.lookup_latest_ami ? join("", data.aws_ami.ecs_ami.*.image_id) : join("", data.aws_ami.user_ami.*.image_id)}"
 
   instance_type   = "${var.instance_type}"
-  key_name        = "${var.key_name}"
+  key_name        = "${local.ssh_key_name}"
   security_groups = ["${aws_security_group.container_instance.id}"]
   user_data       = "${data.template_cloudinit_config.container_instance_cloud_config.rendered}"
 }
