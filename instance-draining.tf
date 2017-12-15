@@ -99,16 +99,16 @@ resource "aws_iam_role_policy_attachment" "autoscaling_to_sns_autocaling_notific
 # #########################################
 # Lambda function
 # #########################################
+locals {
+  instance_draining_function_jar = "${path.module}/lambda/ecs-instance-draining-v0.1-aws.jar"
+}
+
 variable "instance_drainer_function_name" {
   default = "Drainer"
 }
 
 variable "instance_drainer_function_description" {
   default = "Extension to autoscaling lifecycle to drain ECS cluster instances before terminating them"
-}
-
-variable "instance_draining_function_jar" {
-  default = "lambda/ecs-instance-draining-v0.1-aws.jar"
 }
 
 variable "instance_draining_function_handler" {
@@ -128,12 +128,12 @@ variable "instance_draining_function_timeout" {
 }
 
 resource "aws_lambda_function" "instance_draining" {
-  filename         = "${var.instance_draining_function_jar}"
+  filename         = "${local.instance_draining_function_jar}"
   function_name    = "${var.instance_drainer_function_name}"
   description      = "${var.instance_drainer_function_description}"
   role             = "${aws_iam_role.instance_draining_lambda.arn}"
   handler          = "${var.instance_draining_function_handler}"
-  source_code_hash = "${base64sha256(file("${var.instance_draining_function_jar}"))}"
+  source_code_hash = "${base64sha256(file("${local.instance_draining_function_jar}"))}"
   runtime          = "${var.instance_draining_function_runtime}"
   memory_size      = "${var.instance_draining_function_memory}"
   timeout          = "${var.instance_draining_function_timeout}"
