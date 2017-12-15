@@ -112,6 +112,7 @@ module "ecs_cluster" {
 - `consul_client_server_rdp_allowed_cidr` - A CIDR to which instances can connect via Consul RDP
 - `allow_logzio_eu_out` - Set to true to configure (logback appender to) logz.io (EU) access from cluster instances (requires `logzio_eu_allowed_cidr`).
 - `logzio_eu_allowed_cidr` - A CIDR to which instances can connect to https://listener-eu.logz.io:8071.
+- `enable_daemon_tasks` - Set to true to create the required IAM policies to allow cluster instances to start their own daemon tasks. (default: `false`)
 
 ## Outputs
 

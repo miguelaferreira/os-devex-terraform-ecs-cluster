@@ -85,6 +85,11 @@ variable "logzio_eu_allowed_cidr" {
   default     = ""
 }
 
+variable "enable_daemon_tasks" {
+  description = "Set to true to create the required IAM policies to allow cluster instances to start their own daemon tasks"
+  default     = "false"
+}
+
 variable "termination_policies" {
   default = ["OldestLaunchConfiguration", "Default"]
 }
