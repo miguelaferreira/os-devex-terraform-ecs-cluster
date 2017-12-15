@@ -30,9 +30,10 @@ variable "ssh_public_key_file" {
   default     = ""
 }
 
-variable "ssh_allowed_cidr" {
-  description = "A CIDR from which instances accept SSH connections."
-  default     = ""
+variable "ssh_allowed_cidrs" {
+  description = "A list of CIDRs from which instances accept SSH connections."
+  type        = "list"
+  default     = []
 }
 
 variable "allow_http_out" {
@@ -40,9 +41,10 @@ variable "allow_http_out" {
   default     = false
 }
 
-variable "http_allowed_cidr" {
-  description = "A CIDR to which instances can connect via HTTP."
-  default     = ""
+variable "http_allowed_cidrs" {
+  description = "A list of CIDRs to which instances can connect via HTTP."
+  type        = "list"
+  default     = []
 }
 
 variable "allow_https_out" {
@@ -50,9 +52,10 @@ variable "allow_https_out" {
   default     = false
 }
 
-variable "https_allowed_cidr" {
-  description = "A CIDR to which instances can connect via HTTPS."
-  default     = ""
+variable "https_allowed_cidrs" {
+  description = "A list of CIDRs to which instances can connect via HTTPS."
+  type        = "list"
+  default     = []
 }
 
 variable "allow_consul_gossip" {
@@ -60,9 +63,10 @@ variable "allow_consul_gossip" {
   default     = false
 }
 
-variable "consul_gossip_allowed_cidr" {
-  description = "A CIDR to allow Consul gossip traffic to and from."
-  default     = ""
+variable "consul_gossip_allowed_cidrs" {
+  description = "A list of CIDRs to allow Consul gossip traffic to and from."
+  type        = "list"
+  default     = []
 }
 
 variable "allow_consul_client_server_rdp" {
@@ -70,19 +74,15 @@ variable "allow_consul_client_server_rdp" {
   default     = false
 }
 
-variable "consul_client_server_rdp_allowed_cidr" {
-  description = "A CIDR to which instances can connect via Consul RDP"
-  default     = ""
+variable "consul_client_server_rdp_allowed_cidrs" {
+  description = "A list of CIDRs to which instances can connect via Consul RDP"
+  type        = "list"
+  default     = []
 }
 
 variable "allow_logzio_eu_out" {
   description = "Set to true to configure (logback appender to) logz.io (EU) access from cluster instances (requires `logzio_eu_allowed_cidr`)."
   default     = false
-}
-
-variable "logzio_eu_allowed_cidr" {
-  description = "A CIDR to which instances can connect to https://listener-eu.logz.io:8071."
-  default     = ""
 }
 
 variable "enable_daemon_tasks" {
