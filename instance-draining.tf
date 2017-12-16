@@ -100,11 +100,8 @@ resource "aws_iam_role_policy_attachment" "autoscaling_to_sns_autocaling_notific
 # Lambda function
 # #########################################
 locals {
-  instance_draining_function_jar = "${path.module}/lambda/ecs-instance-draining-v0.1-aws.jar"
-}
-
-variable "instance_drainer_function_name" {
-  default = "Drainer"
+  instance_draining_function_jar  = "${path.module}/lambda/ecs-instance-draining-v0.1-aws.jar"
+  instance_draining_function_name = "${local.resource_name_suffix}Drainer"
 }
 
 variable "instance_drainer_function_description" {
@@ -129,7 +126,7 @@ variable "instance_draining_function_timeout" {
 
 resource "aws_lambda_function" "instance_draining" {
   filename         = "${local.instance_draining_function_jar}"
-  function_name    = "${var.instance_drainer_function_name}"
+  function_name    = "${local.instance_draining_function_name}"
   description      = "${var.instance_drainer_function_description}"
   role             = "${aws_iam_role.instance_draining_lambda.arn}"
   handler          = "${var.instance_draining_function_handler}"
@@ -142,7 +139,7 @@ resource "aws_lambda_function" "instance_draining" {
     variables = "${merge(
         local.common_tags,
         map(
-          "Name", "${var.instance_drainer_function_name}",
+          "Name", "${local.instance_draining_function_name}",
           "LIFECYCLE_HOOK_NAME", "${aws_autoscaling_lifecycle_hook.instance_draining.name}"
         )
       )}"
