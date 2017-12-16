@@ -30,10 +30,8 @@ module "ecs_cluster" {
   vpc_id        = "vpc-20f74844"
   ami_id        = "ami-b2df2ca4"
   instance_type = "t2.micro"
-  cloud_config_content = "${data.template_file.container_instance_cloud_config.rendered}"
 
-  allow_ssh_in = true
-  ssh_key_name = "theKey"
+  cloud_config_content = "${data.template_file.container_instance_cloud_config.rendered}"
 
   root_block_device_type = "gp2"
   root_block_device_size = "10"
@@ -100,8 +98,8 @@ module "ecs_cluster" {
 - `environment` - Name of environment this cluster is targeting (default: `env`)
 - `ecs_instance_daemon_tasks` - Number of tasks running as daemons on the cluster instances (default: `0`)
 - `monitoring_enabled` - Sets the value of 'MonitoringEnabled' resource tag (default: `false`)
-- `allow_ssh_in` - Set to true to configure SSH access to cluster instances (requires `ssh_key_name` and `ssh_allowed_cidr`). (default: `false`)
-- `ssh_key_name` - An SSH key name to be installed in the cluster instances. (default: ``)
+- `allow_ssh_in` - Set to true to configure SSH access to cluster instances (requires `ssh_public_key_file` and `ssh_allowed_cidr`). (default: `false`)
+- `ssh_public_key_file` - an SSH key pair public file. (default: ``)
 - `ssh_allowed_cidrs` - A list of CIDRs from which instances accept SSH connections. (default: ``)
 - `allow_http_out` - Set to true to configure HTTP access from cluster instances (requires `http_allowed_cidr`). (default `false`)
 - `http_allowed_cidrs` - A list of CIDRs to which instances can connect via HTTP.

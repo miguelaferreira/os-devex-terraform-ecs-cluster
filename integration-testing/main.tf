@@ -56,14 +56,17 @@ module "vpc" {
 module "ecs_cluster" {
   source = "../"
 
-  vpc_id               = "${module.vpc.vpc_id}"
-  lookup_latest_ami    = true
-  instance_type        = "t2.micro"
-  cloud_config_content = "${data.template_file.container_instance_cloud_config.rendered}"
+  vpc_id                 = "${module.vpc.vpc_id}"
+  vpc_private_subnet_ids = ["${module.vpc.public_subnets}"]
 
-  allow_ssh_in = false
-  ssh_key_name = "${aws_key_pair.ecs_cluster.key_name}"
+  lookup_latest_ami = true
+  instance_type     = "t2.micro"
 
+  allow_ssh_in        = true
+  ssh_public_key_file = "files/id_rsa.pub"
+  ssh_allowed_cidrs   = ["0.0.0.0/0"]
+
+  cloud_config_content      = "${data.template_file.container_instance_cloud_config.rendered}"
   root_block_device_type    = "gp2"
   root_block_device_size    = "10"
   health_check_grace_period = "600"
@@ -82,15 +85,8 @@ module "ecs_cluster" {
     "GroupTotalInstances",
   ]
 
-  vpc_private_subnet_ids         = ["${module.vpc.public_subnets}"]
-  instance_draining_function_jar = "../lambda/ecs-instance-draining-v0.1-aws.jar"
-  project                        = "Something"
-  environment                    = "${var.name}"
-}
-
-resource "aws_key_pair" "ecs_cluster" {
-  key_name   = "testKey"
-  public_key = "${file("files/id_rsa.pub")}"
+  project     = "Something"
+  environment = "${var.name}"
 }
 
 data "aws_instances" "test" {

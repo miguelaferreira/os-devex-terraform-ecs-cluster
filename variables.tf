@@ -21,12 +21,12 @@ variable "monitoring_enabled" {
 variable "vpc_id" {}
 
 variable "allow_ssh_in" {
-  description = "Set to true to configure SSH access to cluster instances (requires (`ssh_public_key_file` or `ssh_key_name`) and `ssh_allowed_cidr`)."
+  description = "Set to true to configure SSH access to cluster instances (requires `ssh_public_key_file` and `ssh_allowed_cidr`)."
   default     = false
 }
 
-variable "ssh_key_name" {
-  description = "An SSH key name to be installed in the cluster instances."
+variable "ssh_public_key_file" {
+  description = "A publick key file to provide SSH access to the cluster instances"
   default     = ""
 }
 
