@@ -146,17 +146,6 @@ resource "aws_lambda_function" "instance_draining" {
   }
 }
 
-resource "aws_cloudwatch_log_group" "instance_draining" {
-  name = "${local.instance_draining_function_name}"
-
-  tags = "${merge(
-    local.common_tags,
-    map(
-      "Name", "sgContainerInstance"
-    )
-  )}"
-}
-
 # #########################################
 # SNS Topic
 # #########################################
