@@ -5,7 +5,7 @@ resource "aws_autoscaling_policy" "container_instance_scale_out" {
   name                   = "${local.resource_name_suffix}ECSClusterScaleOut"
   scaling_adjustment     = 1
   adjustment_type        = "ChangeInCapacity"
-  cooldown               = "${var.scale_up_cooldown_seconds}"
+  cooldown               = "${var.scale_out_cooldown_seconds}"
   autoscaling_group_name = "${aws_cloudformation_stack.autoscaling_group.outputs["name"]}"
 }
 
@@ -13,7 +13,7 @@ resource "aws_autoscaling_policy" "container_instance_scale_in" {
   name                   = "${local.resource_name_suffix}ECSClusterScaleIn"
   scaling_adjustment     = -1
   adjustment_type        = "ChangeInCapacity"
-  cooldown               = "${var.scale_down_cooldown_seconds}"
+  cooldown               = "${var.scale_in_cooldown_seconds}"
   autoscaling_group_name = "${aws_cloudformation_stack.autoscaling_group.outputs["name"]}"
 }
 

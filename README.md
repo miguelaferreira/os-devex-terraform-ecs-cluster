@@ -80,8 +80,8 @@ module "ecs_cluster" {
 - `rolling_update_wait_on_signal` - Should rolling update wait for a signal sent from each new instance before moving on to the next
 - `enabled_metrics` - A list of metrics to gather for the cluster
 - `vpc_private_subnet_ids` - A list of private subnet IDs to launch cluster instances
-- `scale_up_cooldown_seconds` - Number of seconds before allowing another scale up activity (default: `300`)
-- `scale_down_cooldown_seconds` - Number of seconds before allowing another scale down activity (default: `300`)
+- `scale_out_cooldown_seconds` - Number of seconds before allowing another scale out activity (default: `300`)
+- `scale_in_cooldown_seconds` - Number of seconds before allowing another scale in activity (default: `300`)
 - `high_cpu_evaluation_periods` - Number of evaluation periods for high CPU alarm (default: `2`)
 - `high_cpu_period_seconds` - Number of seconds in an evaluation period for high CPU alarm (default: `300`)
 - `high_cpu_threshold_percent` - Threshold as a percentage for high CPU alarm (default: `90`)

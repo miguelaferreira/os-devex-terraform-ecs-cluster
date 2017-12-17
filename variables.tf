@@ -171,11 +171,11 @@ variable "vpc_private_subnet_ids" {
   type = "list"
 }
 
-variable "scale_up_cooldown_seconds" {
+variable "scale_out_cooldown_seconds" {
   default = "300"
 }
 
-variable "scale_down_cooldown_seconds" {
+variable "scale_in_cooldown_seconds" {
   default = "300"
 }
 
